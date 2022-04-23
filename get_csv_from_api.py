@@ -13,7 +13,7 @@ def get_location(data,record,locate,found):
     # print(type(data))
     if(type(data)==dict):
         key_list = list(data.keys())
-        print(key_list)
+        # print(key_list)
         # print(record)
         if record in key_list:
             # print(record)
@@ -30,11 +30,32 @@ def get_location(data,record,locate,found):
         # print(data)
         locate_ret,found = get_location(data[0],record,locate,found)
         if(found):
-            locate=locate+"-[]-"+locate_ret
+            # locate=locate+"-[]-"+locate_ret
+            locate=locate+"-"+locate_ret
             return locate,found
 
-
     return "-1",False
+
+
+
+def traverse(location_arr, index, data_list, data, target):
+    # if(location_arr[index]==target):
+        # print("done")
+        # data_list.append(data[location_arr[index]])
+        # return data_list
+
+    if(type(data)==dict):
+        temp = traverse(location_arr, index+1, data_list, data[location_arr[index]], target)
+    elif(type(data)==list):
+        for every_obj in data:
+            temp = traverse(location_arr, index, data_list, every_obj, target)
+            data_list = temp
+    else:
+        data_list.append(data)
+        # return data_list
+        
+    return data_list
+
 
 
 
@@ -56,6 +77,30 @@ def get_df(api, token=None, records=[], header=None, outputFileName=None):
         location[record]=get_location(data, record, "", False)[0]
 
     print(location)
+
+    # Collecting data in data_dic 
+    data_dic={}
+    for obj in records:
+        data_dic[obj]=[]
+        location_arr = location[obj].split("-")
+        count=0
+        for x in location_arr:
+            if(x==''):
+                count=count+1
+        while(count):
+            location_arr.remove('')
+            count=count-1
+        # print(location_arr)
+        data_dic[obj] = traverse(location_arr, 0, [], data, obj)
+        # print(location_arr)
+
+    print(data_dic)
+    # print(data)
+    df=pd.DataFrame(data_dic)
+    df.to_csv("sample.csv", index=False)
+
+    
+
 
 
     # if(len(records) != 0):
@@ -92,4 +137,48 @@ def get_df(api, token=None, records=[], header=None, outputFileName=None):
 
 
 
-get_df(api="https://api.openweathermap.org/data/2.5/weather?q=pune&units=metric&appid=b97e5c4f9b910fbc38bfe3ebf8f86020", records=["icon","temp","main"])
+# get_df(api="https://api.openweathermap.org/data/2.5/weather?q=pune&units=metric&appid=b97e5c4f9b910fbc38bfe3ebf8f86020", records=["lon","lat","description"])
+get_df(api="http://127.0.0.1:8000/api/ground-list", records=["ground_id","username","ground_name","city","area"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Make a traversal function to traverse the location for each record - and when a list appears the start iterations
+
+
+
+
+
+
+
+
+# Algorithms:
+# Recurssion
+# DFS
+# Backtracking - to store data from json in array
+# Dynamic Programming - to save time

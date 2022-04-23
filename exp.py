@@ -1,7 +1,7 @@
-st = {
-    "name":"Rohan",
-    "course": "BE"
-}
+arr=['','',"rohan",'',"raut"]
+final = []
+for obj in arr:
+    if(obj != ''):
+        final.append(obj)
 
-# lt = [st]*5
-print(st.items())
+print(final)
