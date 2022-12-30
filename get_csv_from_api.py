@@ -168,7 +168,7 @@ get_df(api="http://127.0.0.1:8000/api/ground-list", records=["ground_id","userna
 
 
 
-# Make a traversal function to traverse the location for each record - and when a list appears the start iterations
+# Make a traversal function to traverse the location for each record - and when a list appears then start iterations
 
 
 
